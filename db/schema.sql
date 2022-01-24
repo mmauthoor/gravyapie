@@ -1,9 +1,10 @@
-
--- <!-- What kinds of data will we store -->
--- <!-- what form of data (e.g. integer, etc) -->
-
+-- create Database
 CREATE DATABASE gravyapie;
 
+-- connect to database
+\c gravyapie
+
+-- create table for database
 CREATE TABLE servos (
     id SERIAL PRIMARY KEY,
     name TEXT,
@@ -11,7 +12,8 @@ CREATE TABLE servos (
     street_address TEXT,
     suburb TEXT,
     state TEXT,
-    postcode INTEGER,
     latitude FLOAT,
     longitude FLOAT    
 );
+
+-- INSERT into servos (name, owner, street_address, suburb, state, latitude, longitude) values ('a', 'a', 'a', 'a', 'a', '1', '1');
