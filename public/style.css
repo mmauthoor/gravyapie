@@ -40,28 +40,24 @@ html, body {
     grid-area: leftup;
     width: 100%;
     height: 100%;
-
 }
 
 #grid-left-side {
     grid-area: left;
     width: 100%;
     height: 100%;
-
 }
 
 #grid-rightup-side {
     grid-area:rightup;
     width: 100%;
     height: 100%;
-
 }
 
 #grid-right-side {
     grid-area:right;
     width: 100%;
     height: 100%;
-
 }
 
 #header-spotlight,
