@@ -1,5 +1,7 @@
-/* font - h1 */
+/* fonts */
 @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Exo+2:ital,wght@1,200&family=Readex+Pro:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Exo+2:ital,wght@1,200&family=Fira+Sans&family=Roboto+Condensed&family=Roboto+Slab:wght@300&display=swap');
+
 
 html, body {
     width: 99vw;
@@ -14,7 +16,7 @@ html, body {
     grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas: 
     "leftup map map map map rightup"
-    "leftup map map map map rightup"
+    "left map map map map rightup"
     "left map map map map right"
     "left map map map map right"
     "left map map map map right"
@@ -90,4 +92,36 @@ html, body {
 
 #h3-address {
     margin: 10px 0 5px 0;
+}
+
+/* spotlight */
+
+#spotlight-grid {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    height: 90%;
+    width: 100%;
+}
+
+#spotlight-brendon {
+    font-family: 'Roboto Slab', serif;
+    Padding: 10px 0 10px 0;
+    Font-size:20px;
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+}
+
+#spotlight-moya {
+    font-family: 'Roboto Slab', serif;
+    Padding: 10px 0 10px 0;
+    Font-size:20px;
+}
+
+#spotlight-moey {
+    font-family: 'Roboto Slab', serif;
+    Font-size:20px;
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
 }
