@@ -49,7 +49,6 @@ function initMap() {
       // Browser doesn't support Geolocation
       handleLocationError(false, infoWindow, map.getCenter());
     }
-  // });
 
   initMarkers()
   nicky.textContent = mapCenter.lat;
