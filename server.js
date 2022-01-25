@@ -4,7 +4,7 @@ const app = express();
 const { Pool } = require('pg');
 const pool = new Pool({
     database: 'gravyapie',
-    username: 'root',
+    username: 'harry',
     password: 'password',
 });
 
@@ -38,7 +38,6 @@ app.get("/api/stations/all", (req, res) => {
         res.send(dbres)
     });
 });
-
 
 app.listen(8080, () => {
     console.log("server listening on port 8080 url: http://localhost:8080/")
