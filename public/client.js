@@ -4,6 +4,7 @@ const moya = document.querySelector('#spotlight-moya')
 const nicky = document.querySelector('#latitude-value')
 const john = document.querySelector('#longitude-value')
 const harry = document.querySelector('#address-value')
+const mappy = document.querySelector('#grid-map')
 
 let currentRandom;
 
@@ -41,14 +42,34 @@ function initMarkers() {
           position: obj,
           map,
           title: owner,
+          // icon: stationIcon(station)
         });
       })
     })
 }
 
+function stationIcon(station) {
+  if(station.owner ==='BP') {
+
+  } else if (station.owner === 'Shell') {
+
+  } else if(station.owner === '7-Eleven Pty Ltd') {
+
+  } else if(station.owner === 'Independent Fuel Supplies') {
+    
+  } else if(station.owner === 'Horizon') {
+    
+  } else if(station.owner === 'Ampol') {
+    
+  } else if(station.owner === 'Atlas Fuels Pty Ltd') {
+    
+  } else if(station.owner === 'Caltex') {
+    
+  }
+}
+
 var gridLeftSide = document.querySelector('#grid-left-side')
 var totalStations = document.querySelector('#total-stations')
-
 
 function renderOwners() {
   let url = "/api/owners"
@@ -89,5 +110,12 @@ function handleBrendon() {
   handleCurrentLocation(currentRandom["latitude"], currentRandom["longitude"], currentRandom["street_address"])
 }
 
+function handleLatLong() {
+  john.textContent = map.getCenter().lng();
+  nicky.textContent = map.getCenter().lat();
+}
+
 moey.addEventListener('click', handleMoey)
 brendon.addEventListener('click', handleBrendon)
+mappy.addEventListener('mouseup', handleLatLong)
+mappy.addEventListener('mousedown', handleLatLong)
