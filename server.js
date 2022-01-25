@@ -31,6 +31,14 @@ app.get("/api/owners", (req, res) => {
     });
 })
 
+app.get("/api/stations/random", (req, res) => {
+    let sql = "select * from servos;"
+    pool.query(sql, params = [], (err, dbres) => {
+        let stations = dbres.rows;
+        let rand = Math.floor(Math.random() * stations.length);
+        res.send(stations[rand]);
+    });
+});
 
 app.get("/api/stations/all", (req, res) => {
     let sql = "select * from servos;"

@@ -1,3 +1,12 @@
+const moey = document.querySelector('#spotlight-moey')
+const brendon = document.querySelector('#spotlight-brendon')
+const moya = document.querySelector('#spotlight-moya')
+const nicky = document.querySelector('#latitude-value')
+const john = document.querySelector('#longitude-value')
+const harry = document.querySelector('#address-value')
+
+let currentRandom;
+
 const mapCenter = { 
   lat: -37.8304177, 
   lng: 144.964172 
@@ -10,6 +19,8 @@ function initMap() {
     minZoom: 11
   });
   initMarkers()
+  nicky.textContent = mapCenter.lat;
+  john.textContent = mapCenter.lng; 
 }
 
 let map;
@@ -41,7 +52,6 @@ var totalStations = document.querySelector('#total-stations')
 
 function renderOwners() {
   let url = "/api/owners"
-
   axios
   .get(url)
   .then(res => {
@@ -59,20 +69,25 @@ function renderOwners() {
 
 renderOwners()
 
-let latitudeValue = document.querySelector("#latitude-value");
-let longitudeValue = document.querySelector("#longitude-value");
-latitudeValue.textContent = mapCenter.lat;
-longitudeValue.textContent = mapCenter.lng; 
+function handleMoey() {
+  let url = "http://localhost:8080/api/stations/random"
+  axios.get(url).then(res => {
+    brendon.textContent = res.data.name
+    moya.textContent = res.data.owner
+    currentRandom = res.data
+  })
+  
+}
+//reusable function - to handle current location section
+function handleCurrentLocation(latitude,longitude,address) {
+  nicky.textContent = latitude
+  john.textContent = longitude
+  harry.textContent = address
+}
 
+function handleBrendon() {
+  handleCurrentLocation(currentRandom["latitude"], currentRandom["longitude"], currentRandom["street_address"])
+}
 
-
-
-
-
-
-
-
-
-
-
-
+moey.addEventListener('click', handleMoey)
+brendon.addEventListener('click', handleBrendon)
