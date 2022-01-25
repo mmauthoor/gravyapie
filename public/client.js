@@ -5,6 +5,8 @@ const nicky = document.querySelector('#latitude-value')
 const john = document.querySelector('#longitude-value')
 const harry = document.querySelector('#address-value')
 const mappy = document.querySelector('#grid-map')
+const gridLeftSide = document.querySelector('#grid-left-side')
+const totalStations = document.querySelector('#total-stations')
 
 let currentRandom;
 
@@ -13,18 +15,57 @@ const mapCenter = {
   lng: 144.964172 
 };
 
+let map, infoWindow;
+
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     center: mapCenter,
     zoom: 13,
     minZoom: 11
   });
+  infoWindow = new google.maps.InfoWindow();
+
+  //  Try HTML5 geolocation.
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          infoWindow.setPosition(pos);
+          infoWindow.open(map);
+          infoWindow.setContent("Location found.");
+          map.setCenter(pos);
+          handleLatLong()
+          nicky.textContent = pos.lat;
+          john.textContent = pos.lng;
+        },
+        () => {
+          handleLocationError(true, infoWindow, map.getCenter());
+        }
+      );
+    } else {
+      // Browser doesn't support Geolocation
+      handleLocationError(false, infoWindow, map.getCenter());
+    }
+  // });
+
   initMarkers()
   nicky.textContent = mapCenter.lat;
   john.textContent = mapCenter.lng; 
 }
 
-let map;
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+  infoWindow.setPosition(pos);
+  infoWindow.setContent(
+    browserHasGeolocation
+      ? "Error: The Geolocation service failed."
+      : "Error: Your browser doesn't support geolocation."
+  );
+  infoWindow.open(map);
+}
+
 
 function initMarkers() {
   let url = "http://localhost:8080/api/stations/all"
@@ -68,8 +109,6 @@ function stationIcon(station) {
   }
 }
 //==================
-var gridLeftSide = document.querySelector('#grid-left-side')
-var totalStations = document.querySelector('#total-stations')
 
 function renderOwners() {
   let url = "/api/owners"
@@ -111,9 +150,10 @@ function handleBrendon() {
 }
 
 //==================
+// Recommend renaming this function to 'setNearest5', or breaking down into smaller functions for separate purposes (e.g. handleLatLong and setNearest5). Could probably put some of the data gathering in an API route instead?  - Moya
 function handleLatLong() {
-  var lat = map.getCenter().lat()
-  var lng = map.getCenter().lng();
+  let lat = map.getCenter().lat()
+  let lng = map.getCenter().lng();
   nicky.textContent = lat;
   john.textContent = lng;
   
@@ -122,13 +162,13 @@ function handleLatLong() {
     let allStations = res.data.rows
     
     allStations.forEach(station => {
-      var mlat = station["latitude"];
-      var mlng = station["longitude"];
-      var dLat  = Math.PI/180*(mlat - lat);
-      var dLong = Math.PI/180*(mlng - lng);
-      var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(Math.PI/180*lat) * Math.cos(Math.PI/180*lat) * Math.sin(dLong/2) * Math.sin(dLong/2);
-      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-      var distance = 6371 * c;
+      let mlat = station["latitude"];
+      let mlng = station["longitude"];
+      let dLat  = Math.PI/180*(mlat - lat);
+      let dLong = Math.PI/180*(mlng - lng);
+      let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(Math.PI/180*lat) * Math.cos(Math.PI/180*lat) * Math.sin(dLong/2) * Math.sin(dLong/2);
+      let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      let distance = 6371 * c;
       station["distance"] = distance
       if(station.owner ==='BP') {
         station["color"] = "yellowgreen"
