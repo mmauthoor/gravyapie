@@ -13,18 +13,56 @@ const mapCenter = {
   lng: 144.964172 
 };
 
+let map, infoWindow;
+
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     center: mapCenter,
     zoom: 13,
     minZoom: 11
   });
+  infoWindow = new google.maps.InfoWindow();
+
+  //  Try HTML5 geolocation.
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          infoWindow.setPosition(pos);
+          infoWindow.open(map);
+          infoWindow.setContent("Location found.");
+          map.setCenter(pos);
+          nicky.textContent = pos.lat;
+          john.textContent = pos.lng;
+        },
+        () => {
+          handleLocationError(true, infoWindow, map.getCenter());
+        }
+      );
+    } else {
+      // Browser doesn't support Geolocation
+      handleLocationError(false, infoWindow, map.getCenter());
+    }
+  // });
+
   initMarkers()
   nicky.textContent = mapCenter.lat;
   john.textContent = mapCenter.lng; 
 }
 
-let map;
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+  infoWindow.setPosition(pos);
+  infoWindow.setContent(
+    browserHasGeolocation
+      ? "Error: The Geolocation service failed."
+      : "Error: Your browser doesn't support geolocation."
+  );
+  infoWindow.open(map);
+}
+
 
 function initMarkers() {
   let url = "http://localhost:8080/api/stations/all"
