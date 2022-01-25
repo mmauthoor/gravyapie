@@ -42,32 +42,32 @@ function initMarkers() {
           position: obj,
           map,
           title: owner,
-          // icon: stationIcon(station)
+          icon: stationIcon(station)
         });
       })
     })
 }
-
+//==================
 function stationIcon(station) {
   if(station.owner ==='BP') {
-
+    return "/icon/BP.png"
   } else if (station.owner === 'Shell') {
-
+    return "/icon/Shell.png"
   } else if(station.owner === '7-Eleven Pty Ltd') {
-
+    return "/icon/7-Eleven.png"
   } else if(station.owner === 'Independent Fuel Supplies') {
-    
+    return "/icon/Independent.png" 
   } else if(station.owner === 'Horizon') {
-    
+    return "/icon/Horizon.png"  
   } else if(station.owner === 'Ampol') {
-    
+    return "/icon/Ampol.png"  
   } else if(station.owner === 'Atlas Fuels Pty Ltd') {
-    
+    return "/icon/Atlas.png"
   } else if(station.owner === 'Caltex') {
-    
+    return "/icon/Caltex.png"  
   }
 }
-
+//==================
 var gridLeftSide = document.querySelector('#grid-left-side')
 var totalStations = document.querySelector('#total-stations')
 
@@ -110,12 +110,73 @@ function handleBrendon() {
   handleCurrentLocation(currentRandom["latitude"], currentRandom["longitude"], currentRandom["street_address"])
 }
 
+//==================
 function handleLatLong() {
-  john.textContent = map.getCenter().lng();
-  nicky.textContent = map.getCenter().lat();
+  var lat = map.getCenter().lat()
+  var lng = map.getCenter().lng();
+  nicky.textContent = lat;
+  john.textContent = lng;
+  
+  let url = "http://localhost:8080/api/stations/all"
+  axios.get(url).then(res => {
+    let allStations = res.data.rows
+    
+    allStations.forEach(station => {
+      var mlat = station["latitude"];
+      var mlng = station["longitude"];
+      var dLat  = Math.PI/180*(mlat - lat);
+      var dLong = Math.PI/180*(mlng - lng);
+      var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(Math.PI/180*lat) * Math.cos(Math.PI/180*lat) * Math.sin(dLong/2) * Math.sin(dLong/2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      var distance = 6371 * c;
+      station["distance"] = distance
+      if(station.owner ==='BP') {
+        station["color"] = "yellowgreen"
+      } else if (station.owner === 'Shell') {
+        station["color"] = "coral"
+      } else if(station.owner === '7-Eleven Pty Ltd') {
+        station["color"] = "olivedrab"
+      } else if(station.owner === 'Independent Fuel Supplies') {
+        station["color"] = "lavender" 
+      } else if(station.owner === 'Horizon') {
+        station["color"] = "gold"  
+      } else if(station.owner === 'Ampol') {
+        station["color"] = "darkorange"  
+      } else if(station.owner === 'Atlas Fuels Pty Ltd') {
+        station["color"] = "mistyrose"
+      } else if(station.owner === 'Caltex') {
+        station["color"] = "steelblue"  
+      }
+    })
+    
+    allStations.sort( (a, b) => {
+      if ( a.distance < b.distance ){
+        return -1;
+      } else if ( a.distance > b.distance ){
+        return 1;
+      } else{
+        return 0;
+      }
+    })
+
+    document.querySelector('.test').textContent = allStations[0].name + " (address:" + allStations[0].street_address + ")"
+    document.querySelector('.test').style.backgroundColor = allStations[0].color
+    document.querySelector('.test1').textContent = allStations[1].name + " (address:" + allStations[1].street_address + ")"
+    document.querySelector('.test1').style.backgroundColor = allStations[1].color
+    document.querySelector('.test2').textContent = allStations[2].name + " (address:" + allStations[2].street_address + ")"
+    document.querySelector('.test2').style.backgroundColor = allStations[2].color
+    document.querySelector('.test3').textContent = allStations[3].name + " (address:" + allStations[3].street_address + ")"
+    document.querySelector('.test3').style.backgroundColor = allStations[3].color
+    document.querySelector('.test4').textContent = allStations[4].name + " (address:" + allStations[4].street_address + ")"
+    document.querySelector('.test4').style.backgroundColor = allStations[4].color
+  })
 }
 
+//==================
 moey.addEventListener('click', handleMoey)
 brendon.addEventListener('click', handleBrendon)
 mappy.addEventListener('mouseup', handleLatLong)
-mappy.addEventListener('mousedown', handleLatLong)
+
+//==================
+// mappy.addEventListener('mousedown', handleLatLong)
+//==================
