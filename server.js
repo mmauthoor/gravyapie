@@ -8,12 +8,28 @@ const pool = new Pool({
     password: 'password',
 });
 
-app.use(express.static("public"));
 app.use(express.json());
+app.use(express.static("public"));
 
 app.get("/", (req, res) => {
     res.send("home")
 });
+
+app.get("/api/owners", (req, res) => {
+    let sql = "select owner from servos;"
+    pool.query(sql, params = [], (err, dbres) => {
+        let allOwners = dbres.rows
+        let uniqueOwners = {}
+        allOwners.forEach(obj => {
+            if (uniqueOwners[`${obj.owner}`] === undefined) {
+                uniqueOwners[`${obj.owner}`] = 1
+            } else {
+                uniqueOwners[`${obj.owner}`]++
+            }
+        })
+        res.send(uniqueOwners)
+    });
+})
 
 
 app.get("/api/stations/all", (req, res) => {
