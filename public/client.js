@@ -1,6 +1,11 @@
+const mapCenter = { 
+  lat: -37.8304177, 
+  lng: 144.964172 
+};
+
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: -37.8304177, lng: 144.964172 },
+    center: mapCenter,
     zoom: 13,
     minZoom: 11
   });
@@ -33,8 +38,11 @@ function initMarkers() {
 var gridLeftSide = document.querySelector('#grid-left-side')
 var totalStations = document.querySelector('#total-stations')
 
-let url = "http://localhost:8080/api/owners"
-axios
+
+function renderOwners() {
+  let url = "/api/owners"
+
+  axios
   .get(url)
   .then(res => {
     let owners = res.data
@@ -46,7 +54,19 @@ axios
       p.textContent = `${key} ${owners[key]}`
       gridLeftSide.appendChild(p)
     })
-  })
+  });
+}
+
+renderOwners()
+
+let latitudeValue = document.querySelector("#latitude-value");
+let longitudeValue = document.querySelector("#longitude-value");
+latitudeValue.textContent = mapCenter.lat;
+longitudeValue.textContent = mapCenter.lng; 
+
+
+
+
 
 
 
