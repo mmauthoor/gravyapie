@@ -1,7 +1,6 @@
 const { response } = require("express");
 const express = require("express");
 const app = express();
-const testServo = require('./models/data.js')
 const { Pool } = require('pg');
 const pool = new Pool({
     database: 'gravyapie',
@@ -9,9 +8,12 @@ const pool = new Pool({
     password: 'password',
 });
 
+app.use(express.static("public"));
 app.use(express.json());
-// app.use(express.static("public"));
 
+app.get("/", (req, res) => {
+    res.send("home")
+});
 
 
 app.get("/api/stations/all", (req, res) => {
@@ -21,10 +23,7 @@ app.get("/api/stations/all", (req, res) => {
     });
 });
 
-app.get("/", (req, res) => {
-
-});
 
 app.listen(8080, () => {
-    console.log("server listening on port 8080")
+    console.log("server listening on port 8080 url: http://localhost:8080/")
 });

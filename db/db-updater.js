@@ -1,3 +1,6 @@
+const testServo = require('./models/data.js')
+
+
 // create array for data.js where state is in Victoria
 // change the json file to js, eg data.json > data.js
 let stationsArray = []
