@@ -30,11 +30,26 @@ function initMarkers() {
     })
 }
 
+var gridLeftSide = document.querySelector('#grid-left-side')
+var totalStations = document.querySelector('#total-stations')
+
+let url = "http://localhost:8080/api/owners"
+axios
+  .get(url)
+  .then(res => {
+    let owners = res.data
+    let p = document.createElement("p")
+    p.textContent = Object.values(owners).reduce((accum, num) => accum + num, 0)
+    totalStations.after(p)
+    Object.keys(owners).forEach(key => {
+      let p = document.createElement("p")
+      p.textContent = `${key} ${owners[key]}`
+      gridLeftSide.appendChild(p)
+    })
+  })
 
 
-  // let p = document.createElement("p")
-  // p.textContent = res.data.toString()
-  // document.body.appendChild(p)
+
 
 
 
