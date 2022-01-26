@@ -123,8 +123,8 @@ function initOwners() {
     Object.keys(owners).forEach(key => {
       // reason to create grid and divs here - if we expand our data and it creates more owners, this won't break it, it'll keep adding new owners
       let stationCountElement = document.createElement('div')
-      stationCountElement.style.display = 'grid'
-      stationCountElement.style.gridTemplateColumns = '1fr 1fr'
+      stationCountElement.style.display = 'flex'
+      stationCountElement.style.justifyContent = 'space-between'
       stationCountElement.style.fontSize = '20px'
       stationCountElement.style.marginBottom = '30px'
       stationCountElement.style.fontWeight = '500'
