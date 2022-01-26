@@ -213,7 +213,7 @@ function handleNearbyStations(stations) {
 
   counter = 0
   nearestStationElement.forEach(station => {
-    station.innerHTML = `${stations[counter].name} <br/> Address: ${stations[counter].street_address}`
+    station.innerHTML = `${stations[counter].name} <br/> Address: ${stations[counter].street_address}, ${stations[counter].suburb}` 
     station.style.backgroundColor = stations[counter].color
     counter ++
   })
