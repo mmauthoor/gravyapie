@@ -1,12 +1,12 @@
 /* fonts */
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Exo+2:ital,wght@1,200&family=Readex+Pro:wght@300&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Exo+2:ital,wght@1,200&family=Fira+Sans&family=Roboto+Condensed&family=Roboto+Slab:wght@300&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Special+Elite&display=swap');
 
 html, body {
     width: 99vw;
     height: 99vh;
     overflow: hidden;
+    background-image: url("/icon/paper.png");
+    background-size: 100% 100%;
 }
 
 /* container grid */
@@ -16,7 +16,7 @@ html, body {
     grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas: 
     "leftup map map map map rightup"
-    "left map map map map rightup"
+    "leftup map map map map rightup"
     "left map map map map right"
     "left map map map map right"
     "left map map map map right"
@@ -34,8 +34,9 @@ html, body {
 }
 
 #map {
-    width: 98%;
+    width: 95%;
     height: 100%;
+    box-shadow:rgba(1,1,1,1) 0px 10px 15px;
 }
 
 #grid-leftup-side {
@@ -64,34 +65,44 @@ html, body {
 
 #header-spotlight,
 #header-stats,
+#total-stations,
 #header-current-location,
-#header-nearest-5 {
+#header-nearest-5{
     font-family: 'Bangers', cursive;
     margin: 0;
 }
-
+h1{
+    font-size: 40px;
+    text-shadow: 2px 2px 2px grey;
+}
+p{
+    font-family: 'Special Elite', cursive;
+}
 #nearest-5-list {
+    font-family: 'Special Elite', cursive;
     list-style: none;
     padding: 0;
     font-size: 20px;
 }
 
-.test {
-    background-color: mistyrose;
-}
 
 #latitude-value,
 #longitude-value {
     border: 1px solid black;
+    padding: 2px
+    font-family: 'Special Elite', cursive;
+    background-color: white;
 }
 
 #h3-latitude,
 #h3-longitude {
     margin: 5px 0 5px 0;
+    font-family: 'Special Elite', cursive;
 }
 
 #h3-address {
     margin: 10px 0 5px 0;
+    font-family: 'Special Elite', cursive;
 }
 
 /* spotlight */
@@ -104,7 +115,7 @@ html, body {
 }
 
 #spotlight-brendon {
-    font-family: 'Roboto Slab', serif;
+    font-family: 'Special Elite', cursive;
     Padding: 10px 0 10px 0;
     Font-size:20px;
     text-decoration: underline;
@@ -113,15 +124,23 @@ html, body {
 }
 
 #spotlight-moya {
-    font-family: 'Roboto Slab', serif;
+    font-family: 'Special Elite', cursive;
     Padding: 10px 0 10px 0;
     Font-size:20px;
 }
 
 #spotlight-moey {
-    font-family: 'Roboto Slab', serif;
+    font-family: 'Special Elite', cursive;
     Font-size:20px;
     text-decoration: underline;
     color: blue;
     cursor: pointer;
+}
+
+/* nearest5 */
+.test, .test1, .test2, .test3, .test4{
+    margin: 10px 0 5px 0;
+    Padding: 10px 2px 10px 2px;
+    box-shadow:rgba(1,1,1,1) 0px 10px 15px;
+    border-radius: 5px;
 }
