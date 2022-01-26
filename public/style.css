@@ -71,13 +71,20 @@ html, body {
     font-family: 'Bangers', cursive;
     margin: 0;
 }
-h1{
+
+h1 {
     font-size: 40px;
     text-shadow: 2px 2px 2px grey;
 }
-p{
+
+p {
     font-family: 'Special Elite', cursive;
 }
+
+#stats-container {
+    font-family: 'Special Elite', cursive;
+}
+
 #nearest-5-list {
     font-family: 'Special Elite', cursive;
     list-style: none;
@@ -89,7 +96,7 @@ p{
 #latitude-value,
 #longitude-value {
     border: 1px solid black;
-    padding: 2px
+    padding: 2px;
     font-family: 'Special Elite', cursive;
     background-color: white;
 }
