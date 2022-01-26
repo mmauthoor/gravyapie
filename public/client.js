@@ -26,30 +26,29 @@ function initMap() {
   infoWindow = new google.maps.InfoWindow();
 
   //  Try HTML5 geolocation.
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          infoWindow.setPosition(pos);
-          infoWindow.open(map);
-          infoWindow.setContent("Location found.");
-          map.setCenter(pos);
-          handleLatLong()
-          nicky.textContent = pos.lat;
-          john.textContent = pos.lng;
-        },
-        () => {
-          handleLocationError(true, infoWindow, map.getCenter());
-        }
-      );
-    } else {
-      // Browser doesn't support Geolocation
-      handleLocationError(false, infoWindow, map.getCenter());
-    }
-  // });
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        infoWindow.setPosition(pos);
+        infoWindow.open(map);
+        infoWindow.setContent("Location found.");
+        map.setCenter(pos);
+        handleLatLong()
+        nicky.textContent = pos.lat;
+        john.textContent = pos.lng;
+      },
+      () => {
+        handleLocationError(true, infoWindow, map.getCenter());
+      }
+    );
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+  }
 
   initMarkers()
   nicky.textContent = mapCenter.lat;
