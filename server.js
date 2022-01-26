@@ -4,8 +4,8 @@ const app = express();
 const { Pool } = require('pg');
 const pool = new Pool({
     database: 'gravyapie',
-    username: 'harry',
-    password: 'password',
+    // username: 'harry',
+    // password: 'password',
 });
 
 app.use(express.json());
