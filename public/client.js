@@ -153,7 +153,8 @@ function handleMoey() {
 function handleBrendon() {
   nicky.textContent = currentRandom["latitude"]
   john.textContent = currentRandom["longitude"]
-  harry.textContent = currentRandom["street_address"]
+  harry.textContent = currentRandom["street_address"] + ', ' + currentRandom["state"] + ', Australia'
+  map.setCenter({ lat: currentRandom["latitude"], lng: currentRandom["longitude"] })
 }
 
 //==================
