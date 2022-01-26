@@ -27,6 +27,7 @@
             <h1 id='header-stats'>Stats</h1>
             <h2 id='total-stations'>total stations</h2>
             <h2 id='header-stats'>breakdown by owners</h2>
+            <div id='stats-container'></div>
         </div>
         <div id='grid-rightup-side'>
             <h1 id='header-current-location'>Current Location</h1>
@@ -39,13 +40,14 @@
         </div>
         <div id='grid-right-side'>
             <h1 id='header-nearest-5'>Nearest 5</h1>
-            <ul id='nearest-5-list'>
-                <li class='test'>a <br> b <br> c</li>
-                <li class='test1'>a <br> b <br> b</li>
-                <li class='test2'>a <br> b <br> b</li>
-                <li class='test3'>a <br> b <br> b</li>
-                <li class='test4'>a <br> b <br> b</li>
-            </ul>
+            <div id='nearest-5-grid'>
+                <div id='nearest-5-list'>
+                    <div class='nearest-5-element'></div>
+                    <div class='nearest-5-element'></div>
+                    <div class='nearest-5-element'></div>
+                    <div class='nearest-5-element'></div>
+                    <div class='nearest-5-element'></div>
+            </div>
         </div>
     </div>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh7TI24kNhx0iO1f2wfklp_McqEh-WgS4&callback=initMap"

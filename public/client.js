@@ -7,19 +7,19 @@ const harry = document.querySelector('#address-value')
 const mappy = document.querySelector('#grid-map')
 const gridLeftSide = document.querySelector('#grid-left-side')
 const totalStations = document.querySelector('#total-stations')
+const nearestStationElement = document.querySelectorAll('.nearest-5-element')
+const statsContainer = document.querySelector('#stats-container')
 
+// global variables
 let currentRandom;
-
-const mapCenter = { 
-  lat: -37.8304177, 
-  lng: 144.964172 
-};
-
+let lat;
+let lng;
 let map, infoWindow;
+let currentStation;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
-    center: mapCenter,
+    center: {lat: -37.8304177, lng: 144.964172},
     zoom: 13,
     minZoom: 11
   });
@@ -50,9 +50,9 @@ function initMap() {
     handleLocationError(false, infoWindow, map.getCenter());
   }
 
+  initOwners()
   initMarkers()
-  nicky.textContent = mapCenter.lat;
-  john.textContent = mapCenter.lng; 
+  handleLatLong()
 }
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -65,7 +65,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.open(map);
 }
 
-
+// stations markers
 function initMarkers() {
   let url = "http://localhost:8080/api/stations/all"
   axios
@@ -87,7 +87,8 @@ function initMarkers() {
       })
     })
 }
-//==================
+
+// station marker icons
 function stationIcon(station) {
   if(station.owner ==='BP') {
     return "/icon/BP.png"
@@ -107,27 +108,38 @@ function stationIcon(station) {
     return "/icon/Caltex.png"  
   }
 }
-//==================
 
-function renderOwners() {
+// handles stats
+function initOwners() {
   let url = "/api/owners"
   axios
   .get(url)
   .then(res => {
     let owners = res.data
-    let p = document.createElement("p")
-    p.textContent = Object.values(owners).reduce((accum, num) => accum + num, 0)
-    totalStations.after(p)
+    let totalStationsElement = document.createElement("p")
+    totalStationsElement.textContent = Object.values(owners).reduce((accum, num) => accum + num, 0)
+    totalStations.after(totalStationsElement)
+
     Object.keys(owners).forEach(key => {
-      let p = document.createElement("p")
-      p.textContent = `${key} ${owners[key]}`
-      gridLeftSide.appendChild(p)
+      // reason to create grid and divs here - if we expand our data and it creates more owners, this won't break it, it'll keep adding new owners
+      let stationCountElement = document.createElement('div')
+      stationCountElement.style.display = 'grid'
+      stationCountElement.style.gridTemplateColumns = '1fr 1fr'
+      stationCountElement.style.fontSize = '20px'
+      stationCountElement.style.marginBottom = '30px'
+      stationCountElement.style.fontWeight = '500'
+      let ownerNameElement = document.createElement("div")
+      let ownerCountElement = document.createElement('div')
+      stationCountElement.appendChild(ownerNameElement)
+      stationCountElement.appendChild(ownerCountElement)
+      ownerNameElement.textContent = key
+      ownerCountElement.textContent = owners[key]
+      statsContainer.appendChild(stationCountElement)
     })
   });
 }
 
-renderOwners()
-
+// handles spotlight
 function handleMoey() {
   let url = "http://localhost:8080/api/stations/random"
   axios.get(url).then(res => {
@@ -135,79 +147,75 @@ function handleMoey() {
     moya.textContent = res.data.owner
     currentRandom = res.data
   })
-  
-}
-//reusable function - to handle current location section
-function handleCurrentLocation(latitude,longitude,address) {
-  nicky.textContent = latitude
-  john.textContent = longitude
-  harry.textContent = address
 }
 
+//reusable function - to handle current location section
 function handleBrendon() {
-  handleCurrentLocation(currentRandom["latitude"], currentRandom["longitude"], currentRandom["street_address"])
+  nicky.textContent = currentRandom["latitude"]
+  john.textContent = currentRandom["longitude"]
+  harry.textContent = currentRandom["street_address"]
 }
 
 //==================
 // Recommend renaming this function to 'setNearest5', or breaking down into smaller functions for separate purposes (e.g. handleLatLong and setNearest5). Could probably put some of the data gathering in an API route instead?  - Moya
 function handleLatLong() {
-  let lat = map.getCenter().lat()
-  let lng = map.getCenter().lng();
+  lat = map.getCenter().lat()
+  lng = map.getCenter().lng();
   nicky.textContent = lat;
   john.textContent = lng;
-  
+  handleDistance()
+}
+
+// handles nearest 5 stations || because it has its own function, it can now be called right away in initMap to display the nearest stations upon opening app
+function handleDistance() {
   let url = "http://localhost:8080/api/stations/all"
   axios.get(url).then(res => {
     let allStations = res.data.rows
-    
     allStations.forEach(station => {
-      let mlat = station["latitude"];
-      let mlng = station["longitude"];
-      let dLat  = Math.PI/180*(mlat - lat);
-      let dLong = Math.PI/180*(mlng - lng);
+      let dLat  = Math.PI/180*(station["latitude"] - lat);
+      let dLong = Math.PI/180*(station["longitude"] - lng);
       let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(Math.PI/180*lat) * Math.cos(Math.PI/180*lat) * Math.sin(dLong/2) * Math.sin(dLong/2);
       let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
       let distance = 6371 * c;
       station["distance"] = distance
-      if(station.owner ==='BP') {
-        station["color"] = "yellowgreen"
-      } else if (station.owner === 'Shell') {
-        station["color"] = "coral"
-      } else if(station.owner === '7-Eleven Pty Ltd') {
-        station["color"] = "olivedrab"
-      } else if(station.owner === 'Independent Fuel Supplies') {
-        station["color"] = "lavender" 
-      } else if(station.owner === 'Horizon') {
-        station["color"] = "gold"  
-      } else if(station.owner === 'Ampol') {
-        station["color"] = "darkorange"  
-      } else if(station.owner === 'Atlas Fuels Pty Ltd') {
-        station["color"] = "mistyrose"
-      } else if(station.owner === 'Caltex') {
-        station["color"] = "steelblue"  
-      }
+      currentStation = station
+      
+      handleColors('BP', 'yellowgreen')
+      handleColors('Shell', 'coral')
+      handleColors('7-Eleven Pty Ltd', 'olivedrab')
+      handleColors('Independent Fuel Supplies', 'lavender')
+      handleColors('Horizon', 'gold')
+      handleColors('Ampol', 'darkorange')
+      handleColors('Atlas Fuels Pty Ltd', 'mistyrose')
+      handleColors('Caltex', 'steelblue')
     })
-    
-    allStations.sort( (a, b) => {
-      if ( a.distance < b.distance ){
-        return -1;
-      } else if ( a.distance > b.distance ){
-        return 1;
-      } else{
-        return 0;
-      }
-    })
+    handleNearbyStations(allStations)
+  })
+}
 
-    document.querySelector('.test').textContent = allStations[0].name + " (address:" + allStations[0].street_address + ")"
-    document.querySelector('.test').style.backgroundColor = allStations[0].color
-    document.querySelector('.test1').textContent = allStations[1].name + " (address:" + allStations[1].street_address + ")"
-    document.querySelector('.test1').style.backgroundColor = allStations[1].color
-    document.querySelector('.test2').textContent = allStations[2].name + " (address:" + allStations[2].street_address + ")"
-    document.querySelector('.test2').style.backgroundColor = allStations[2].color
-    document.querySelector('.test3').textContent = allStations[3].name + " (address:" + allStations[3].street_address + ")"
-    document.querySelector('.test3').style.backgroundColor = allStations[3].color
-    document.querySelector('.test4').textContent = allStations[4].name + " (address:" + allStations[4].street_address + ")"
-    document.querySelector('.test4').style.backgroundColor = allStations[4].color
+function handleColors(owner, color) {
+  if(currentStation.owner === owner) {
+    currentStation["color"] = color
+  }
+}
+
+// handling the 5 nearest stations, called from handle distance
+function handleNearbyStations(stations) {
+  stations.sort( (a, b) => {
+    if ( a.distance < b.distance ){
+      return -1;
+    } else if ( a.distance > b.distance ){
+      return 1;
+    } else{
+      return 0;
+    }
+  })
+
+  counter = 0
+  nearestStationElement.forEach(station => {
+    station.innerHTML = `${stations[counter].name} <br/> Address: ${stations[counter].street_address}`
+    station.style.backgroundColor = stations[counter].color
+    counter ++
   })
 }
 
