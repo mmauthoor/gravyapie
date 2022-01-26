@@ -19,7 +19,7 @@ let currentStation;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
-    center: {lat: -37.8304177, lng: 144.964172},
+    center: { lat: -37.8304177, lng: 144.964172 },
     zoom: 13,
     minZoom: 11
   });
@@ -90,22 +90,22 @@ function initMarkers() {
 
 // station marker icons
 function stationIcon(station) {
-  if(station.owner ==='BP') {
+  if (station.owner === 'BP') {
     return "/icon/BP.png"
   } else if (station.owner === 'Shell') {
     return "/icon/Shell.png"
-  } else if(station.owner === '7-Eleven Pty Ltd') {
+  } else if (station.owner === '7-Eleven Pty Ltd') {
     return "/icon/7-Eleven.png"
-  } else if(station.owner === 'Independent Fuel Supplies') {
-    return "/icon/Independent.png" 
-  } else if(station.owner === 'Horizon') {
-    return "/icon/Horizon.png"  
-  } else if(station.owner === 'Ampol') {
-    return "/icon/Ampol.png"  
-  } else if(station.owner === 'Atlas Fuels Pty Ltd') {
+  } else if (station.owner === 'Independent Fuel Supplies') {
+    return "/icon/Independent.png"
+  } else if (station.owner === 'Horizon') {
+    return "/icon/Horizon.png"
+  } else if (station.owner === 'Ampol') {
+    return "/icon/Ampol.png"
+  } else if (station.owner === 'Atlas Fuels Pty Ltd') {
     return "/icon/Atlas.png"
-  } else if(station.owner === 'Caltex') {
-    return "/icon/Caltex.png"  
+  } else if (station.owner === 'Caltex') {
+    return "/icon/Caltex.png"
   }
 }
 
@@ -113,30 +113,30 @@ function stationIcon(station) {
 function initOwners() {
   let url = "/api/owners"
   axios
-  .get(url)
-  .then(res => {
-    let owners = res.data
-    let totalStationsElement = document.createElement("p")
-    totalStationsElement.textContent = Object.values(owners).reduce((accum, num) => accum + num, 0)
-    totalStations.after(totalStationsElement)
+    .get(url)
+    .then(res => {
+      let owners = res.data
+      let totalStationsElement = document.createElement("p")
+      totalStationsElement.textContent = Object.values(owners).reduce((accum, num) => accum + num, 0)
+      totalStations.after(totalStationsElement)
 
-    Object.keys(owners).forEach(key => {
-      // reason to create grid and divs here - if we expand our data and it creates more owners, this won't break it, it'll keep adding new owners
-      let stationCountElement = document.createElement('div')
-      stationCountElement.style.display = 'flex'
-      stationCountElement.style.justifyContent = 'space-between'
-      stationCountElement.style.fontSize = '20px'
-      stationCountElement.style.marginBottom = '30px'
-      stationCountElement.style.fontWeight = '500'
-      let ownerNameElement = document.createElement("div")
-      let ownerCountElement = document.createElement('div')
-      stationCountElement.appendChild(ownerNameElement)
-      stationCountElement.appendChild(ownerCountElement)
-      ownerNameElement.textContent = key
-      ownerCountElement.textContent = owners[key]
-      statsContainer.appendChild(stationCountElement)
-    })
-  });
+      Object.keys(owners).forEach(key => {
+        // reason to create grid and divs here - if we expand our data and it creates more owners, this won't break it, it'll keep adding new owners
+        let stationCountElement = document.createElement('div')
+        stationCountElement.style.display = 'flex'
+        stationCountElement.style.justifyContent = 'space-between'
+        stationCountElement.style.fontSize = '20px'
+        stationCountElement.style.marginBottom = '30px'
+        stationCountElement.style.fontWeight = '500'
+        let ownerNameElement = document.createElement("div")
+        let ownerCountElement = document.createElement('div')
+        stationCountElement.appendChild(ownerNameElement)
+        stationCountElement.appendChild(ownerCountElement)
+        ownerNameElement.textContent = key
+        ownerCountElement.textContent = owners[key]
+        statsContainer.appendChild(stationCountElement)
+      })
+    });
 }
 
 // handles spotlight
@@ -173,14 +173,14 @@ function handleDistance() {
   axios.get(url).then(res => {
     let allStations = res.data.rows
     allStations.forEach(station => {
-      let dLat  = Math.PI/180*(station["latitude"] - lat);
-      let dLong = Math.PI/180*(station["longitude"] - lng);
-      let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(Math.PI/180*lat) * Math.cos(Math.PI/180*lat) * Math.sin(dLong/2) * Math.sin(dLong/2);
-      let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      let dLat = Math.PI / 180 * (station["latitude"] - lat);
+      let dLong = Math.PI / 180 * (station["longitude"] - lng);
+      let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.PI / 180 * lat) * Math.cos(Math.PI / 180 * lat) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
+      let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       let distance = 6371 * c;
       station["distance"] = distance
       currentStation = station
-      
+
       handleColors('BP', 'yellowgreen')
       handleColors('Shell', 'coral')
       handleColors('7-Eleven Pty Ltd', 'olivedrab')
@@ -195,28 +195,28 @@ function handleDistance() {
 }
 
 function handleColors(owner, color) {
-  if(currentStation.owner === owner) {
+  if (currentStation.owner === owner) {
     currentStation["color"] = color
   }
 }
 
 // handling the 5 nearest stations, called from handle distance
 function handleNearbyStations(stations) {
-  stations.sort( (a, b) => {
-    if ( a.distance < b.distance ){
+  stations.sort((a, b) => {
+    if (a.distance < b.distance) {
       return -1;
-    } else if ( a.distance > b.distance ){
+    } else if (a.distance > b.distance) {
       return 1;
-    } else{
+    } else {
       return 0;
     }
   })
 
   counter = 0
   nearestStationElement.forEach(station => {
-    station.innerHTML = `${stations[counter].name} <br/> Address: ${stations[counter].street_address}, ${stations[counter].suburb}` 
+    station.innerHTML = `${stations[counter].name} <br/> Address: ${stations[counter].street_address}, ${stations[counter].suburb}`
     station.style.backgroundColor = stations[counter].color
-    counter ++
+    counter++
   })
 }
 
