@@ -4,8 +4,8 @@ const app = express();
 const { Pool } = require('pg');
 const pool = new Pool({
     database: 'gravyapie',
-    username: 'harry',
-    password: 'password',
+    // username: 'harry',
+    // password: 'password',
 });
 
 app.use(express.json());
@@ -49,11 +49,11 @@ app.get("/api/owners", (req, res) => {
 });
 
 app.get("/api/stations/random", (req, res) => {
-    let sql = "SELECT * FROM servos;"
+    let sql = "SELECT * FROM servos order by random() limit 1;"
     pool.query(sql, params = [], (err, dbres) => {
-        let stations = dbres.rows;
-        let rand = Math.floor(Math.random() * stations.length);
-        res.send(stations[rand]);
+        // let stations = dbres.rows;
+        // let rand = Math.floor(Math.random() * stations.length);
+        res.send(dbres.rows[0]);
     });
 });
 
