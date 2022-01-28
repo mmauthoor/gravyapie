@@ -121,22 +121,37 @@ function initOwners() {
       totalStations.after(totalStationsElement)
 
       Object.keys(owners).forEach(key => {
-        // reason to create grid and divs here - if we expand our data and it creates more owners, this won't break it, it'll keep adding new owners
-        let stationCountElement = document.createElement('div')
-        stationCountElement.style.display = 'flex'
-        stationCountElement.style.justifyContent = 'space-between'
-        stationCountElement.style.fontSize = '20px'
-        stationCountElement.style.marginBottom = '30px'
-        stationCountElement.style.fontWeight = '500'
-        let ownerNameElement = document.createElement("div")
-        let ownerCountElement = document.createElement('div')
-        stationCountElement.appendChild(ownerNameElement)
-        stationCountElement.appendChild(ownerCountElement)
-        ownerNameElement.textContent = key
-        ownerCountElement.textContent = owners[key]
-        statsContainer.appendChild(stationCountElement)
+        if (owners[key] > 10) {
+          // reason to create grid and divs here - if we expand our data and it creates more owners, this won't break it, it'll keep adding new owners
+          let stationCountElement = document.createElement('div')
+          stationCountElement.style.display = 'flex'
+          stationCountElement.style.justifyContent = 'space-between'
+          stationCountElement.style.fontSize = '20px'
+          stationCountElement.style.marginBottom = '30px'
+          stationCountElement.style.fontWeight = '500'
+          stationCountElement.style.color = servoColor[key]
+          let ownerNameElement = document.createElement("div")
+          let ownerCountElement = document.createElement('div')
+          stationCountElement.appendChild(ownerNameElement)
+          stationCountElement.appendChild(ownerCountElement)
+          ownerNameElement.textContent = key
+          ownerCountElement.textContent = owners[key]
+          statsContainer.appendChild(stationCountElement)
+        }
       })
     });
+}
+
+let servoColor = {
+  'BP': 'yellowgreen',
+  'Shell': 'coral',
+  '7-Eleven Pty Ltd': 'olivedrab',
+  'Independent Fuel Supplies': 'gray',
+  'Horizon': 'gold',
+  'Ampol': 'darkorange',
+  'Atlas Fuels Pty Ltd': 'mistyrose',
+  'Caltex': 'steelblue',
+  'United': 'dodgerblue'
 }
 
 // handles spotlight
@@ -154,7 +169,8 @@ function handleBrendon() {
   nicky.textContent = currentRandom["latitude"]
   john.textContent = currentRandom["longitude"]
   harry.textContent = currentRandom["street_address"] + ', ' + currentRandom["state"] + ', Australia'
-  map.setCenter({ lat: currentRandom["latitude"], lng: currentRandom["longitude"] })
+  map.setCenter({ lat: currentRandom["latitude"], lng: currentRandom["longitude"] });
+  map.setZoom(5)
 }
 
 //==================
@@ -189,6 +205,7 @@ function handleDistance() {
       handleColors('Ampol', 'darkorange')
       handleColors('Atlas Fuels Pty Ltd', 'mistyrose')
       handleColors('Caltex', 'steelblue')
+      handleColors('United', 'dodgerblue')
     })
     handleNearbyStations(allStations)
   })
@@ -212,7 +229,7 @@ function handleNearbyStations(stations) {
     }
   })
 
-  counter = 0
+  let counter = 0
   nearestStationElement.forEach(station => {
     station.innerHTML = `${stations[counter].name} <br/> Address: ${stations[counter].street_address}, ${stations[counter].suburb}`
     station.style.backgroundColor = stations[counter].color
